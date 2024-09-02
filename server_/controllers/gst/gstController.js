@@ -6,7 +6,7 @@ exports.verifyGst = async (req, res, next) => {
     method: 'POST',
     url: 'https://gst-verification.p.rapidapi.com/v3/tasks/sync/verify_with_source/ind_gst_certificate',
     headers: {
-      'x-rapidapi-key': '544b42d2e2msh564105a57c22990p1342cfjsn72960564a3ba',
+      'x-rapidapi-key': process.env.RAPID_API_KEY,
       'x-rapidapi-host': 'gst-verification.p.rapidapi.com',
       'Content-Type': 'application/json',
     },

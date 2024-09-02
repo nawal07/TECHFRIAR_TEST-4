@@ -120,6 +120,12 @@ const Register = () => {
       } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value)) {
         error = 'PAN number is invalid';
       }
+    } else if (key === 'bank') {
+      if (value === '') {
+        error = 'Bank Account Number is required';
+      } else if (value.length < 10) {
+        error = 'Invalid Bank Account Number';
+      }
     } else if (key === 'ifsc') {
       if (value === '') {
         error = 'IFSC Code is required';
@@ -276,8 +282,7 @@ const Register = () => {
         }
       );
       setLoading(false);
-
-      const res = response.data.result;
+      const res = response.data;
       if (res === 'null' || 'undefined') {
         console.log('IF', res);
         setIsPanVerified(false);
@@ -470,468 +475,470 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.main}>
-      <div className={styles.register}>
-        <h1>Registration Page</h1>
-        <div className={styles.registerFields}>
-          {/* Name Field of the User  */}
-          <div>
-            <label htmlFor="Name">Full Name</label>
+    <div className={styles.body}>
+      <div className={`${styles.main} ${loading && styles.loading}`}>
+        <div className={styles.register}>
+          <h1>Registration Page</h1>
+          <div className={styles.registerFields}>
+            {/* Name Field of the User  */}
             <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'name');
-                  }}
-                  value={user.name}
-                  disabled={isNameAdded}
-                  // style={{ width: '247px' }}
-                />
-                {errors.name && (
-                  <p className={styles.errorMessage}>{errors.name}</p>
-                )}
-              </span>
-              {!isNameAdded ? (
-                <button
-                  disabled={!user.name || loading}
-                  className={
-                    loading ? styles.loadingButton : styles.verifyButton
-                  }
-                  onClick={addName}
-                >
-                  &nbsp;ADD&nbsp;
-                </button>
-              ) : (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-            </div>
-          </div>
-          {/* Email Field of the User  */}
-          <div>
-            <label htmlFor="Email">Email ID</label>
-            <div>
-              <span>
-                <input
-                  type="email"
-                  onChange={e => {
-                    handleChange(e, 'email');
-                  }}
-                  value={user.email}
-                  disabled={isEmailVerified}
-                  className={styles.emailPhoneInput}
-                />
-                {errors.email && (
-                  <p className={styles.errorMessage}>{errors.email}</p>
-                )}
-              </span>
-
-              {isEmailVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {!isEmailVerified && (
-                <div>
-                  {!isOtpSent ? (
-                    <button
-                      disabled={!!errors.email || !user.email || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={sendOtp}
-                    >
-                      SEND
-                    </button>
-                  ) : (
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Enter OTP"
-                        value={otp}
-                        onChange={e => setOtp(e.target.value)}
-                        className={styles.otpInput}
-                      />
-                      <button
-                        disabled={loading}
-                        className={
-                          loading ? styles.loadingButton : styles.verifyButton
-                        }
-                        onClick={verifyOtp}
-                      >
-                        Verify
-                      </button>
-                    </div>
+              <label htmlFor="Name">Full Name</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'name');
+                    }}
+                    value={user.name}
+                    disabled={isNameAdded}
+                    // style={{ width: '247px' }}
+                  />
+                  {errors.name && (
+                    <p className={styles.errorMessage}>{errors.name}</p>
                   )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Phone Number Field of the User  */}
-          <div>
-            <label htmlFor="Phone">Phone Number</label>
-            <div>
-              <span>
-                <input
-                  type="tel"
-                  maxLength={10}
-                  onChange={e => {
-                    handleChange(e, 'phone');
-                  }}
-                  value={user.phone}
-                  disabled={isPhoneVerified}
-                />
-                {errors.phone && (
-                  <p className={styles.errorMessage}>{errors.phone}</p>
+                </span>
+                {!isNameAdded ? (
+                  <button
+                    disabled={!user.name || loading}
+                    className={
+                      loading ? styles.loadingButton : styles.verifyButton
+                    }
+                    onClick={addName}
+                  >
+                    &nbsp;ADD&nbsp;
+                  </button>
+                ) : (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
                 )}
-              </span>
-              {isPhoneVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-
-              {!isPhoneVerified && (
-                <div>
-                  {!isPhoneOtpSent ? (
-                    <button
-                      disabled={!!errors.phone || !user.phone || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={sendPhoneOtp}
-                    >
-                      SEND
-                    </button>
-                  ) : (
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Enter OTP"
-                        value={otp}
-                        onChange={e => setOtp(e.target.value)}
-                        className={styles.otpInput}
-                      />
-                      <button
-                        disabled={loading}
-                        className={
-                          loading ? styles.loadingButton : styles.verifyButton
-                        }
-                        onClick={verifyPhoneOtp}
-                      >
-                        Verify
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Aadhar Number Field of the User  */}
-          <div>
-            <label htmlFor="Aadhar">Aadhar Number</label>
-            <div>
-              <span>
-                <input
-                  type="tel"
-                  maxLength={12}
-                  onChange={e => {
-                    handleChange(e, 'aadhar');
-                  }}
-                  value={user.aadhar}
-                  disabled={isAadharVerified}
-                />
-                {errors.aadhar && (
-                  <p className={styles.errorMessage}>{errors.aadhar}</p>
-                )}
-              </span>
-              {isAadharVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-
-              {!isAadharVerified && (
-                <div>
-                  {!isAadharNumberSent && (
-                    <button
-                      disabled={!!errors.aadhar || !user.aadhar || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={verifyAadhar}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Pan Number Field of the User  */}
-          <div>
-            <label htmlFor="Pan">Pan Number</label>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'pan');
-                  }}
-                  value={user.pan}
-                  disabled={isPanVerified}
-                />
-                {errors.pan && (
-                  <p className={styles.errorMessage}>{errors.pan}</p>
-                )}
-              </span>
-              {isPanVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {!isPanVerified && (
-                <div>
-                  {!isPanNumberSent && (
-                    <button
-                      disabled={!!errors.pan || !user.pan || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={verifyPan}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Bank account Number Field of the User  */}
-          <div>
-            <label htmlFor="Bank">Bank Account</label>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'bank');
-                  }}
-                  value={user.bank}
-                  disabled={isBankAdd}
-                />
-                {errors.bank && (
-                  <p className={styles.errorMessage}>{errors.bank}</p>
-                )}
-              </span>
-              {isBankVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {!isBankVerified && (
-                <div>
-                  {!isAccountNumberSent && (
-                    <button
-                      disabled={
-                        !!errors.bank || !user.bank || loading || isBankAdd
-                      }
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={addBank}
-                    >
-                      &nbsp;ADD&nbsp;
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* IFSC Code Field of the User  */}
-          <div>
-            <label htmlFor="IFSC">IFSC Code</label>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'ifsc');
-                  }}
-                  value={user.ifsc}
-                  disabled={isBankVerified}
-                />
-                {errors.ifsc && (
-                  <p className={styles.errorMessage}>{errors.ifsc}</p>
-                )}
-              </span>
-              {isBankVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {!isBankVerified && (
-                <div>
-                  {!isIfscSent && (
-                    <button
-                      disabled={!!errors.ifsc || !user.ifsc || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={verifyBank}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* GST Number Field of the User  */}
-          <div>
-            <label htmlFor="GST">GST Number</label>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'gst');
-                  }}
-                  value={user.gst}
-                  disabled={isGstVerified}
-                />
-                {errors.gst && (
-                  <p className={styles.errorMessage}>{errors.gst}</p>
-                )}
-              </span>
-              {isGstVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-
-              {!isGstVerified && (
-                <div>
-                  {!isGstNumberSent && (
-                    <button
-                      disabled={!!errors.gst || !user.gst || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={verifyGst}
-                    >
-                      Verify
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Pincode Lookup Field of the User  */}
-          <div>
-            <label htmlFor="Pincode">Pincode</label>
-            <div>
-              <span>
-                <input
-                  type="text"
-                  onChange={e => {
-                    handleChange(e, 'pincode');
-                  }}
-                  value={user.pincode}
-                  disabled={isPincodeVerified}
-                />
-                {errors.gst && (
-                  <p className={styles.errorMessage}>{errors.pincode}</p>
-                )}
-              </span>
-              {isPincodeVerified && (
-                <Image
-                  className={styles.verifiedImage}
-                  src={'/verified.jpg'}
-                  alt="Verified"
-                  width={20}
-                  height={20}
-                />
-              )}
-              {!isPincodeVerified && (
-                <div>
-                  {!isPincodeSent && (
-                    <button
-                      disabled={!!errors.pincode || !user.pincode || loading}
-                      className={
-                        loading ? styles.loadingButton : styles.verifyButton
-                      }
-                      onClick={getAddress}
-                    >
-                      &nbsp;GET&nbsp;
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-          {address &&
-            address.City &&
-            address.District &&
-            address.State &&
-            address.Post_Office && (
-              <div className={styles.addressLookup}>
-                <div>
-                  <p>ADDRESS LOOKUP DETAILS</p>
-                  <ul>
-                    <li>City: {address.City}</li>
-                    <li>District: {address.District}</li>
-                    <li>State: {address.State}</li>
-                    <li> Post Office: {address.Post_Office}</li>
-                  </ul>
-                </div>
               </div>
-            )}
-        </div>
-        <button className={styles.button} onClick={handleSubmit}>
-          Register
-        </button>
-      </div>
+            </div>
+            {/* Email Field of the User  */}
+            <div>
+              <label htmlFor="Email">Email ID</label>
+              <div>
+                <span>
+                  <input
+                    type="email"
+                    onChange={e => {
+                      handleChange(e, 'email');
+                    }}
+                    value={user.email}
+                    disabled={isEmailVerified}
+                    className={styles.emailPhoneInput}
+                  />
+                  {errors.email && (
+                    <p className={styles.errorMessage}>{errors.email}</p>
+                  )}
+                </span>
 
-      {formSubmit && (
-        <div className={styles.success}>
-          <p>User Registered Successfully</p>
+                {isEmailVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                {!isEmailVerified && (
+                  <div>
+                    {!isOtpSent ? (
+                      <button
+                        disabled={!!errors.email || !user.email || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={sendOtp}
+                      >
+                        SEND
+                      </button>
+                    ) : (
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Enter OTP"
+                          value={otp}
+                          onChange={e => setOtp(e.target.value)}
+                          className={styles.otpInput}
+                        />
+                        <button
+                          disabled={loading}
+                          className={
+                            loading ? styles.loadingButton : styles.verifyButton
+                          }
+                          onClick={verifyOtp}
+                        >
+                          Verify
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Phone Number Field of the User  */}
+            <div>
+              <label htmlFor="Phone">Phone Number</label>
+              <div>
+                <span>
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    onChange={e => {
+                      handleChange(e, 'phone');
+                    }}
+                    value={user.phone}
+                    disabled={isPhoneVerified}
+                  />
+                  {errors.phone && (
+                    <p className={styles.errorMessage}>{errors.phone}</p>
+                  )}
+                </span>
+                {isPhoneVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+
+                {!isPhoneVerified && (
+                  <div>
+                    {!isPhoneOtpSent ? (
+                      <button
+                        disabled={!!errors.phone || !user.phone || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={sendPhoneOtp}
+                      >
+                        SEND
+                      </button>
+                    ) : (
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Enter OTP"
+                          value={otp}
+                          onChange={e => setOtp(e.target.value)}
+                          className={styles.otpInput}
+                        />
+                        <button
+                          disabled={loading}
+                          className={
+                            loading ? styles.loadingButton : styles.verifyButton
+                          }
+                          onClick={verifyPhoneOtp}
+                        >
+                          Verify
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Aadhar Number Field of the User  */}
+            <div>
+              <label htmlFor="Aadhar">Aadhar Number</label>
+              <div>
+                <span>
+                  <input
+                    type="tel"
+                    maxLength={12}
+                    onChange={e => {
+                      handleChange(e, 'aadhar');
+                    }}
+                    value={user.aadhar}
+                    disabled={isAadharVerified}
+                  />
+                  {errors.aadhar && (
+                    <p className={styles.errorMessage}>{errors.aadhar}</p>
+                  )}
+                </span>
+                {isAadharVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+
+                {!isAadharVerified && (
+                  <div>
+                    {!isAadharNumberSent && (
+                      <button
+                        disabled={!!errors.aadhar || !user.aadhar || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={verifyAadhar}
+                      >
+                        Verify
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Pan Number Field of the User  */}
+            <div>
+              <label htmlFor="Pan">Pan Number</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'pan');
+                    }}
+                    value={user.pan}
+                    disabled={isPanVerified}
+                  />
+                  {errors.pan && (
+                    <p className={styles.errorMessage}>{errors.pan}</p>
+                  )}
+                </span>
+                {isPanVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                {!isPanVerified && (
+                  <div>
+                    {!isPanNumberSent && (
+                      <button
+                        disabled={!!errors.pan || !user.pan || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={verifyPan}
+                      >
+                        Verify
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Bank account Number Field of the User  */}
+            <div>
+              <label htmlFor="Bank">Bank Account</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'bank');
+                    }}
+                    value={user.bank}
+                    disabled={isBankAdd}
+                  />
+                  {errors.bank && (
+                    <p className={styles.errorMessage}>{errors.bank}</p>
+                  )}
+                </span>
+                {isBankVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                {!isBankVerified && (
+                  <div>
+                    {!isAccountNumberSent && (
+                      <button
+                        disabled={
+                          !!errors.bank || !user.bank || loading || isBankAdd
+                        }
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={addBank}
+                      >
+                        &nbsp;ADD&nbsp;
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* IFSC Code Field of the User  */}
+            <div>
+              <label htmlFor="IFSC">IFSC Code</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'ifsc');
+                    }}
+                    value={user.ifsc}
+                    disabled={isBankVerified}
+                  />
+                  {errors.ifsc && (
+                    <p className={styles.errorMessage}>{errors.ifsc}</p>
+                  )}
+                </span>
+                {isBankVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                {!isBankVerified && (
+                  <div>
+                    {!isIfscSent && (
+                      <button
+                        disabled={!!errors.ifsc || !user.ifsc || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={verifyBank}
+                      >
+                        Verify
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* GST Number Field of the User  */}
+            <div>
+              <label htmlFor="GST">GST Number</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'gst');
+                    }}
+                    value={user.gst}
+                    disabled={isGstVerified}
+                  />
+                  {errors.gst && (
+                    <p className={styles.errorMessage}>{errors.gst}</p>
+                  )}
+                </span>
+                {isGstVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+
+                {!isGstVerified && (
+                  <div>
+                    {!isGstNumberSent && (
+                      <button
+                        disabled={!!errors.gst || !user.gst || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={verifyGst}
+                      >
+                        Verify
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Pincode Lookup Field of the User  */}
+            <div>
+              <label htmlFor="Pincode">Pincode</label>
+              <div>
+                <span>
+                  <input
+                    type="text"
+                    onChange={e => {
+                      handleChange(e, 'pincode');
+                    }}
+                    value={user.pincode}
+                    disabled={isPincodeVerified}
+                  />
+                  {errors.gst && (
+                    <p className={styles.errorMessage}>{errors.pincode}</p>
+                  )}
+                </span>
+                {isPincodeVerified && (
+                  <Image
+                    className={styles.verifiedImage}
+                    src={'/verified.jpg'}
+                    alt="Verified"
+                    width={20}
+                    height={20}
+                  />
+                )}
+                {!isPincodeVerified && (
+                  <div>
+                    {!isPincodeSent && (
+                      <button
+                        disabled={!!errors.pincode || !user.pincode || loading}
+                        className={
+                          loading ? styles.loadingButton : styles.verifyButton
+                        }
+                        onClick={getAddress}
+                      >
+                        &nbsp;GET&nbsp;
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            {address &&
+              address.City &&
+              address.District &&
+              address.State &&
+              address.Post_Office && (
+                <div className={styles.addressLookup}>
+                  <div>
+                    <p>ADDRESS LOOKUP DETAILS</p>
+                    <ul>
+                      <li>City: {address.City}</li>
+                      <li>District: {address.District}</li>
+                      <li>State: {address.State}</li>
+                      <li> Post Office: {address.Post_Office}</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+          </div>
+          <button className={styles.button} onClick={handleSubmit}>
+            Register
+          </button>
         </div>
-      )}
+
+        {formSubmit && (
+          <div className={styles.success}>
+            <p>User Registered Successfully</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

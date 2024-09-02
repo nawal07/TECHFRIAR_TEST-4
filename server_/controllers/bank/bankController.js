@@ -6,8 +6,7 @@ exports.verifyBank = async (req, res, next) => {
     method: 'POST',
     url: 'https://bank-account-verification.p.rapidapi.com/v3/tasks/async/verify_with_source/validate_bank_account',
     headers: {
-      // 'x-rapidapi-key': '544b42d2e2msh564105a57c22990p1342cfjsn72960564a3ba',
-      'x-rapidapi-key': '6b350e677dmsh12c5acecc5ff40dp1cf29ejsna629354ef77c',
+      'x-rapidapi-key': process.env.RAPID_API_KEY,
       'x-rapidapi-host': 'bank-account-verification.p.rapidapi.com',
       'Content-Type': 'application/json',
     },
@@ -41,14 +40,14 @@ exports.verifyId = async (req, res, next) => {
       request_id: id,
     },
     headers: {
-      // 'x-rapidapi-key': '544b42d2e2msh564105a57c22990p1342cfjsn72960564a3ba',
-      'x-rapidapi-key': '6b350e677dmsh12c5acecc5ff40dp1cf29ejsna629354ef77c',
+      'x-rapidapi-key': process.env.RAPID_API_KEY,
       'x-rapidapi-host': 'bank-account-verification.p.rapidapi.com',
     },
   };
 
   try {
     const response = await axios.request(options);
+    console.log('DATA', response.data[0]);
     console.log('RESULT', response.data[0].result);
     res.status(200).send(response.data);
   } catch (error) {

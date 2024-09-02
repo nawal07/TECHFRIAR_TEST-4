@@ -6,10 +6,7 @@ exports.verifyPAN = async (req, res) => {
     method: 'POST',
     url: 'https://aadhaar-number-verification-api-using-pan-number.p.rapidapi.com/api/validation/pan_to_aadhaar',
     headers: {
-      // 'x-rapidapi-key': '65448e4847msha03cbce039f3014p13ce32jsn80e6e0bfe860',
-      // 'x-rapidapi-key': '6b350e677dmsh12c5acecc5ff40dp1cf29ejsna629354ef77c',
-      // 'x-rapidapi-key': '43f4455f3fmsh33a483d3b179dfbp110cadjsn7dbefc1c5911',
-      'x-rapidapi-key': '544b42d2e2msh564105a57c22990p1342cfjsn72960564a3ba',
+      'x-rapidapi-key': process.env.RAPID_API_KEY,
       'x-rapidapi-host':
         'aadhaar-number-verification-api-using-pan-number.p.rapidapi.com',
       'Content-Type': 'application/json',

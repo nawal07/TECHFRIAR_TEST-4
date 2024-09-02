@@ -1,15 +1,29 @@
-.main{
+.main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(34, 193, 195);
+  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(253, 187, 45, 1) 100%
+  );
+}
+.registration {
   width: fit-content;
-  margin: 15% auto;
+  padding: 100px;
+  border: 2px solid whitesmoke;
+  background-color: rgb(240, 224, 194) ;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
-
 }
 
-.link{
+.link {
   text-decoration: none;
   color: brown;
-  
-  
 }

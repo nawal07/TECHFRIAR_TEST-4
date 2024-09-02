@@ -1,4 +1,3 @@
-const { message } = require('antd');
 const axios = require('axios');
 
 exports.verifyAadhar = async (req, res) => {
@@ -7,9 +6,7 @@ exports.verifyAadhar = async (req, res) => {
     method: 'POST',
     url: 'https://api.apyhub.com/validate/aadhaar',
     headers: {
-      'apy-token':
-        'APY0n4wNXyNQ2ETTT0mWjjpa8WXRZ5aULj0fYD8cwyAIPPnqzilrL5EnnyivoAIQIpESpvM',
-        // 'APY0w0TPIhVh8EPVjzkLI5SeU5JEVxjMC3jOG3HHa0UPrgWYmRJZiDrLDhmmcO13l2Ly'
+      'apy-token': process.env.AADHAR_API_KEY,
       'Content-Type': 'application/json',
     },
     data: { aadhaar: aadhar },
