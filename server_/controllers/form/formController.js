@@ -8,9 +8,6 @@ exports.submitForm = async (req, res, next) => {
       $or: [
         { email },
         { phone },
-        { aadhar },
-        { pan },
-        { bank }
       ]
     });
 
